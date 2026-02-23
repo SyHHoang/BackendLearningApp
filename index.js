@@ -9,6 +9,7 @@ import courseRouter from './router/course/courseRouter.js'
 import imageKitRouter from './router/imgKitRouter.js'
 import vocabularyRouter from './router/course/vocabularyRouter.js'
 import grammarRouter from './router/course/grammarRouter.js'
+import examRouter from './router/practice/examRouter.js'
 dotenv.config();        
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use('/courses',courseRouter)
 app.use('/imgUpload',imageKitRouter)
 app.use('/vocabulary',vocabularyRouter)
 app.use('/grammar',grammarRouter)
+app.use('/exams', examRouter)
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))

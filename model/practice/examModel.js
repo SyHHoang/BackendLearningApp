@@ -7,70 +7,30 @@ const ExamSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-
-    level: {
+    examCategory: {
       type: String,
-      enum: ["N5", "N4", "N3", "N2", "N1"],
+      enum: ['toeic', 'ielts', 'toefl', 'other'],
+      default: 'other',
       required: true
     },
-    structure: {
-      vocabulary: {
-        count: {
-          type: Number,
-          required: true
-        },
-        duration:{
-          type: Number,
-          required: true
-        }
-      },
-      reading: {
-       count: {
-          type: Number,
-          required: true
-        },
-        duration:{
-          type: Number,
-          required: true
-        }
-      },
-      listening: {  
-       count: {
-          type: Number,
-          required: true
-        },
-        duration:{
-          type: Number,
-          required: true
-        }
-      },
+    examType: {
+      type: String,
+      enum: ['free', 'order'],
+      default: 'free',
+      required: true
     },
-    questionIds: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Question"
-      }
-    ],
+    totalTime:{
+      type: Number,
+      required: true
+    },
+    level: {
+      type: String,
+      enum: ['A1','A2','B1','B2','C1','C2','None'],
+      default:'None',
+      required: true
+    },
   },
   { timestamps: true }
 );
 
-
-ExamSchema.virtual('duration').get(function() {
-  return (
-    this.structure.vocabulary.duration +
-    this.structure.reading.duration +
-    this.structure.listening.duration
-  );
-});
-
-ExamSchema.virtual('totalQuestions').get(function() {
-  return (
-    this.structure.vocabulary.count +
-    this.structure.reading.count +
-    this.structure.listening.count
-  );
-});
-ExamSchema.set("toJSON", { virtuals: true });
-ExamSchema.set("toObject", { virtuals: true });
 export default mongoose.model("Exam", ExamSchema);

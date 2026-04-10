@@ -1,12 +1,16 @@
 import express from 'express';
-import { veryfireToken } from '../../middleware/authMiddleware.js';
-import { createExam, getAllExams, getExamById, updateExam, deleteExam } from '../../controller/practice/examController.js';
+import { veryfireToken,isAdmin } from '../../middleware/authMiddleware.js';
+import { createExam, getAllExams, getExamById, updateExam, deleteExam,getExamByIdForUser} from '../../controller/practice/examController.js';
 
 const router = express.Router();
-router.get('/', veryfireToken, getAllExams);
-router.get('/:id', veryfireToken, getExamById);
-router.post('/', veryfireToken, createExam);
-router.put('/:id', veryfireToken, updateExam);
-router.delete('/:id', veryfireToken, deleteExam);
+router.use(veryfireToken)
+router.get('/user/:id', getExamByIdForUser);
+router.get('/', getAllExams);
+
+router.use(isAdmin)
+router.get('/:id', getExamById);
+router.post('/', createExam);
+router.put('/:id', updateExam);
+router.delete('/:id', deleteExam);
 
 export default router;

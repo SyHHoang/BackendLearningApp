@@ -5,6 +5,14 @@ const QuestionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    type: {
+      type: String,
+      enum: ['choice', 'write'],
+      default: 'choice',
+      required: true
+    },
+    partId:String,
+    order:Number,//thứ tự cho 1 số chức năng cụ thể
     image:{   
        imageUrl: String,
        imageId: String, //id ảnh cũ để xóa

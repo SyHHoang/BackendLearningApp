@@ -11,7 +11,11 @@ const courseSchema= new mongoose.Schema({
         type:String,
         required:true
     },
-    oldImgUrlLocal:{
+    imgId:{
+        type:String,
+        required:true
+    },
+    oldImgId:{
         type: String,
         default:''
     },

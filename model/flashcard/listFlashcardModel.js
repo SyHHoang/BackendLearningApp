@@ -1,20 +1,35 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const listFlashcardSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true
+const cardListSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    user:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
+    description: {
+      type: String,
+      default: '',
     },
-    description: String,
-    flashcards: [{
+    owner_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Flashcard", 
-    }]
-});
+      ref: 'User',
+      required: true,
+    },
+    is_public: {
+      type: Boolean,
+      default: false,
+    },
+    card_count: {
+      type: Number,
+      default: 0,
+    },
+  },
+  { timestamps: true }
+)
 
-const ListFlashcardModel = mongoose.model('ListFlashcard', listFlashcardSchema);
-export default ListFlashcardModel;
+cardListSchema.index({ owner_id: 1 })
+cardListSchema.index({ is_public: 1 })
+cardListSchema.index({ name: 'text', tags: 'text' })
+
+export default mongoose.model('ListFlashcard', cardListSchema)

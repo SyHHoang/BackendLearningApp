@@ -19,8 +19,8 @@ const getAllCourse = async(req,res)=>{
 }
 const getCourseDetail=async(req,res)=>{
     try{
-        const {_id} =req.params
-        const getCourse=await Course.findById(_id).populate('lesson','name').lean()
+        const { id } = req.params
+        const getCourse=await Course.findById(id).populate('lesson', 'title description').lean()
         return res.status(200).json({
             success:true,
             message:"Lấy thông tin chi tiết khóa học",
@@ -36,8 +36,8 @@ const getCourseDetail=async(req,res)=>{
 }
 const createCourse =async(req,res)=>{
     try{
-        const {name,imgUrl,description}=req.body
-        if(!name||!imgUrl||!description){
+        const {name,imgUrl,description,imgId}=req.body
+        if(!name||!imgUrl||!description||!imgId){
                 return res.status(400).json({
                 success:false,
                 message:'Thiếu thông tin'
@@ -54,7 +54,7 @@ const createCourse =async(req,res)=>{
             name:name,
             imgUrl:imgUrl,
             description:description,
-            oldImgUrlLocal:imgUrl
+            imgId:imgId
         })
         const createNewCourse=await newCourse.save()
         if(createNewCourse){
@@ -80,10 +80,8 @@ const createCourse =async(req,res)=>{
 const deleteCourse = async(req,res)=>{
     try{
         const {id}=req.params
-        const{oldImgUrlLocal}=reg.body
         const find=await Course.findByIdAndDelete(id);
         if(find){
-            
             return res.status(200).json({
                 success:true,
                 message:'Xóa khóa học thành công'
@@ -100,7 +98,7 @@ const deleteCourse = async(req,res)=>{
 const updateCourse = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, imgUrl, description,oldImgUrlLocal} = req.body;
+        const { name, imgUrl, description,imgId} = req.body;
 
         // Kiểm tra xem course có tồn tại không
         const course = await Course.findById(id);
@@ -114,7 +112,9 @@ const updateCourse = async (req, res) => {
         const updateData = {};
         if (name) updateData.name = name;
         if (imgUrl) {updateData.imgUrl = imgUrl;
-            updateData.oldImgUrlLocal=oldImgUrlLocal
+                    updateData.oldImgId=updateData?.imgId||""
+                    updateData.imgId=imgId
+ 
         }
         if (description) updateData.description = description;
         updateData.updateAt = Date.now();

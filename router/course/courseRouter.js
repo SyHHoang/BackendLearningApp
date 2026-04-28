@@ -4,12 +4,13 @@ import express from 'express'
 import { veryfireToken,isAdmin } from '../../middleware/authMiddleware.js'
 
 const router = express.Router();
-router.get('/', veryfireToken, getAllCourse)
-router.get('/:id', veryfireToken, getCourseDetail)
+router.use(veryfireToken)
+router.get('/', getAllCourse)
+router.get('/:id', getCourseDetail)
 
 router.use(isAdmin)
-router.post('/', veryfireToken, createCourse)
-router.post('/:courseId/lessons', veryfireToken, createLesson)
-router.patch('/:id', veryfireToken, updateCourse)
-router.delete('/:id', veryfireToken, deleteCourse)
+router.post('/', createCourse)
+router.post('/:courseId/lessons', createLesson)
+router.patch('/:id', updateCourse)
+router.delete('/:id', deleteCourse)
 export default router

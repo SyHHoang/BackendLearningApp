@@ -1,10 +1,11 @@
 import User from '../model/userModel.js';
 import bcrypt from 'bcryptjs';
-import {createToken} from '../services/createToken.js'
+import {createToken,generateRefreshToken} from '../services/createToken.js'
 export { createUser,login };
 const createUser= async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        console.log("req là",req)
         console.log(req.body)
         //kiểm tra thông tin bắt buộc
         if(!email && !password){
@@ -29,13 +30,15 @@ const createUser= async (req, res) => {
             email,
             passwordHash,
         });
+        
         const create=await newUser.save();
+        const refreshToken = await generateRefreshToken(newUser._id, '7d');
         if(create){        
            return  res.status(201).json({
             success: true,
             message: 'Tạo người dùng thành công',
-            user: newUser,
-            token: createToken(newUser._id,'30h',newUser.role)
+            accessToken: createToken(newUser._id,'30h',newUser.role),
+            refreshToken: refreshToken
         })}
             return res.status(400).json({
             success: false,
@@ -45,7 +48,7 @@ const createUser= async (req, res) => {
         console.log(error)
         res.status(500).json({  
             success: false,
-            message: 'Lỗi máy chủ'
+            message: 'Lỗi máy chủ',
         });
     }
 }
@@ -53,6 +56,7 @@ const createUser= async (req, res) => {
 const login= async (req, res) => {
     try{
         const { email, password } = req.body;
+        console.log("req là",req)
         //kiểm tra thông tin
         if(!email || !password){
             return res.status(400).json({
@@ -76,15 +80,27 @@ const login= async (req, res) => {
                 message:'Mật khẩu không đúng',
             });
         }
+        const refreshToken = await generateRefreshToken(user._id, '7d');
+        res.cookie('accessToken', createToken(user._id,'30h',user.role), {
+  httpOnly: true,
+  secure: false, // dev
+  sameSite: 'lax'
+});
+
+res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: false,
+  sameSite: 'lax'
+});
         //đăng nhập thành công
         res.status(200).json({
             success:true,
             message:'Đăng nhập thành công',
             user:user,
             role:user.role,
-            token:createToken(user._id,'30h',user.role)
         });
     }catch(err){
+        console.log(err)
          res.status(500).json({
             success:false,
             message:'Lỗi máy chủ',

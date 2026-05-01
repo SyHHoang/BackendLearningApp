@@ -15,6 +15,7 @@ import audioRouter from './router/audioRouter.js'
 import userExamRouter from './router/practice/userExamRouter.js'
 import flashCardListRouter from './router/flashcard/flashCardListRouter.js'
 import flashCard from './router/flashcard/flashcardRouter.js'
+import userDashboard from './router/userDasdboardRouter.js'
 dotenv.config();        
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -36,6 +37,7 @@ app.use('/audio', audioRouter)
 app.use('/userExam', userExamRouter)
 app.use('/cardLists', flashCardListRouter)
 app.use('/cards',flashCard)
+app.use('/userDashboard',userDashboard)
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('MongoDB connected'))

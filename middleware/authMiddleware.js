@@ -1,17 +1,12 @@
 import jwt from 'jsonwebtoken'
-export {veryfireToken,isAdmin}
-
-
-const veryfireToken=(req,res,next)=>{
+export {verifyToken,isAdmin}
+const verifyToken=(req,res,next)=>{
    try{
     const accessToken = req.cookies.accessToken;
     console.log('accessToken là',accessToken)
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
-    console.log('decoded token là',decoded)
     req.userId = decoded.id;
     req.userRole=decoded.role
-    console.log('userId là',req.userId)
-    console.log('role là',req.userRole)
 
     if (!req.userId||!req.userRole) {
                 return res.status(401).json({

@@ -1,9 +1,9 @@
 import { saveUserExamResult, getUserExamResult, getUserExamHistory} from "../../controller/practice/userExamController.js";
 import express from "express";
-import { veryfireToken } from "../../middleware/authMiddleware.js";
+import { verifyToken } from "../../middleware/authMiddleware.js";
 const router = express.Router();
 
-router.post('/:ExamId', veryfireToken, saveUserExamResult);
-router.get('/result/:id', veryfireToken, getUserExamResult);
-router.get('/history', veryfireToken, getUserExamHistory);
+router.post('/:ExamId', verifyToken, saveUserExamResult);
+router.get('/result/:id', verifyToken, getUserExamResult);
+router.get('/history', verifyToken, getUserExamHistory);
 export default router;

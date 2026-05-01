@@ -1,6 +1,6 @@
 import express from 'express';
 import { audioAuth } from '../services/audioServices.js';
-import { veryfireToken } from '../middleware/authMiddleware.js';
+import {verifyToken } from '../middleware/authMiddleware.js';
 const router = express.Router();
-router.get('/', veryfireToken, audioAuth);
+router.get('/', verifyToken, audioAuth);
 export default router;

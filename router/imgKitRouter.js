@@ -1,6 +1,6 @@
 import express from 'express';
 import { getTokenImageKit } from "../services/imageKitServices.js";
-import {veryfireToken} from "../middleware/authMiddleware.js"
+import {verifyToken} from "../middleware/authMiddleware.js"
 const router = express.Router();
-router.get('/imageKitToken',veryfireToken,getTokenImageKit);
+router.get('/imageKitToken',verifyToken,getTokenImageKit);
 export default router;

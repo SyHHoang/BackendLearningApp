@@ -29,14 +29,6 @@ const courseSchema= new mongoose.Schema({
             ref:"Lesson"
         }
     ],
-    createAt:{
-        type:Date,
-        default:Date.now
-    },
-    updateAt:{
-        type:Date,
-        default:Date.now
-    }
-})
+},{ timestamps: true })
 const Course= new mongoose.model('Course',courseSchema)
 export default Course

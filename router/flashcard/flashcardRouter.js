@@ -6,10 +6,10 @@ import {
   updateFlashcard,
   deleteFlashcard,
 } from '../../controller/flashcard/flashCardController.js'
-import {veryfireToken} from '../../middleware/authMiddleware.js'
+import {verifyToken} from '../../middleware/authMiddleware.js'
 const router = express.Router()
 router.get('/:id',getCardList)
-router.use(veryfireToken)
+router.use(verifyToken)
 router.post('/:id', createFlashcard)
 router.post('/many/:id',createManyFlashCard)                                                   
 router.put('/:id', updateFlashcard)                     

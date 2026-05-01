@@ -1,10 +1,10 @@
 import { createCourse, updateCourse, deleteCourse, getAllCourse, getCourseDetail } from '../../controller/course/courseController.js'
 import { createLesson } from '../../controller/course/lessonController.js'
 import express from 'express'
-import { veryfireToken,isAdmin } from '../../middleware/authMiddleware.js'
+import { verifyToken,isAdmin } from '../../middleware/authMiddleware.js'
 
 const router = express.Router();
-router.use(veryfireToken)
+router.use(verifyToken)
 router.get('/', getAllCourse)
 router.get('/:id', getCourseDetail)
 

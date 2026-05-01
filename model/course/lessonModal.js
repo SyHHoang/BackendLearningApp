@@ -20,14 +20,6 @@ const lessonSchema= new mongoose.Schema({
             ref:"Question"
         }
     ]},
-    createAt:{
-        type:Date,
-        default:Date.now
-    },
-    updateAt:{
-        type:Date,
-        default:Date.now
-    }
-},)
+},{ timestamps: true })
 const Lesson =  mongoose.model('Lesson',lessonSchema)
 export default Lesson

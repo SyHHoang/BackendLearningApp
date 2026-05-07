@@ -36,8 +36,8 @@ const getCourseDetail=async(req,res)=>{
 }
 const createCourse =async(req,res)=>{
     try{
-        const {name,imgUrl,description,imgId}=req.body
-        if(!name||!imgUrl||!description||!imgId){
+        const {name,imgUrl,description,imgId,category}=req.body
+        if(!name||!imgUrl||!description||!imgId||!category){
                 return res.status(400).json({
                 success:false,
                 message:'Thiếu thông tin'
@@ -54,7 +54,8 @@ const createCourse =async(req,res)=>{
             name:name,
             imgUrl:imgUrl,
             description:description,
-            imgId:imgId
+            imgId:imgId,
+            category:category
         })
         const createNewCourse=await newCourse.save()
         if(createNewCourse){
@@ -98,7 +99,7 @@ const deleteCourse = async(req,res)=>{
 const updateCourse = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, imgUrl, description,imgId} = req.body;
+        const { name, imgUrl, description,imgId,category} = req.body;
 
         // Kiểm tra xem course có tồn tại không
         const course = await Course.findById(id);
@@ -118,7 +119,7 @@ const updateCourse = async (req, res) => {
         }
         if (description) updateData.description = description;
         updateData.updateAt = Date.now();
-
+        if(category) updateData.category = category;
         // Cập nhật course
         const updatedCourse = await Course.findByIdAndUpdate(
             id,

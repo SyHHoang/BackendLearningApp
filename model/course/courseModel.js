@@ -23,6 +23,12 @@ const courseSchema= new mongoose.Schema({
         type:String,
         required:true
     },
+    category:{
+        
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"CourseCategory"
+             
+    },
     lesson:[
         {   
             type:mongoose.Schema.Types.ObjectId,
@@ -30,5 +36,7 @@ const courseSchema= new mongoose.Schema({
         }
     ],
 },{ timestamps: true })
+courseSchema.index({ category: 1 });
 const Course= new mongoose.model('Course',courseSchema)
+
 export default Course

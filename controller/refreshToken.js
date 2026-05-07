@@ -1,33 +1,31 @@
 
 import jwt from "jsonwebtoken";
 import { createToken,generateRefreshToken } from "../services/createToken.js";
-import redis from "../config/redis.js"; 
+import redis from "../services/redis.js"; 
+import User from '../model/userModel.js'
  export const refreshToken = async (req, res) => {
-  const { refresh_token } = req.body;
-  if (!refresh_token) {
-    return res.status(401).json({ error: "No refresh token" });
-  }
-
   try {
-    // verify JWT
-    const decoded = jwt.verify(
-      refresh_token,
-      process.env.JWT_REFRESH_SECRET
-    );
-
     // check Redis
-    const stored = await redis.get(`refresh:${refresh_token}`);
+    const stored = await redis.get(`refresh:${req.refreshToken}`);
     if (!stored) {
       return res.status(403).json({ error: "Invalid refresh token" });
     }
-
+    const checkUser=await User.findOne({_id:req.userId}).select('role').lean()
+    if(!checkUser){
+      return res.status(403).json({ error: "Không tìm thấy người dùng" });
+    }
     // tạo access token mới
-    const newAccessToken = createToken(decoded.userId, '1h', decoded.role);
 
+        res.cookie('accessToken', createToken(req.userId,'1m',checkUser.role), {
+  httpOnly: true,
+  secure: false, // dev
+  sameSite: 'lax'
+});
     res.json({
-      access_token: newAccessToken
+      success:true
     });
   } catch (err) {
+    console.log("err",err)
     return res.status(403).json({ error: "Invalid token" });
   }
 };

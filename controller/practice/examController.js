@@ -35,8 +35,8 @@ const createQuestion = async (type, questionList, partId) => {
 };
 const createExam = async (req, res) => {
   try {
-    const { title, level, examCategory, examType, mainContent,totalTime} = req.body;
-
+    const { title, level, examCategory, examType, mainContent} = req.body;
+    let {totalTime}=req.body
     if (!title || !level || !Array.isArray(mainContent) || mainContent.length === 0 || !examCategory || !examType) {
       return res.status(400).json({
         success: false,
@@ -99,12 +99,30 @@ const createExam = async (req, res) => {
 
 const getAllExams = async (req, res) => {
   try {
-    const exams = await Exam.find().sort({ createdAt: -1 }).lean();
-    
+    const {page,level,search}=req.query
+    console.log("req",req.query)
+    const skip=(page-1)*15
+    let totalDocument=0
+    let exams=null
+    const filter={}
+    if(level) filter.level=level
+    if(search) filter.title={   $regex: search,
+                                $options: 'i' }
+//     if(level){
+//     totalDocument=await Exam.countDocuments({level:level})
+// exams = await Exam.find({level:level}).skip(skip).limit(10).sort({ createdAt: -1 }).lean();    
+//     }
+    //else{
+    totalDocument=await Exam.countDocuments(filter)
+    exams = await Exam.find(filter).skip(skip).limit(10).sort({ createdAt: -1 }).lean();
+    //}
+    console.log("exam",exams)
+    const totalPage=Math.ceil(totalDocument/15)
     return res.status(200).json({
       success: true,
       message: 'Lấy danh sách đề thi thành công',
       data: exams,
+      totalPage:totalPage
     });
   } catch (err) {
     console.error('getAllExams error:', err);

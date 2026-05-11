@@ -3,13 +3,18 @@ import {deleteImageKit} from '../../services/imageKitServices.js'
 export{createCourse,updateCourse,deleteCourse,getAllCourse,getCourseDetail}
 const getAllCourse = async(req,res)=>{
     try{
-        const getAll=await Course.find().select('-lesson').lean()
+        console.log(req.query)
+        let category=req.query.category||null
+        const filter= category?{category:category}:{}
+        const getAll=await Course.find(filter).select('-lesson').lean()
+        console.log(getAll)
         return res.status(200).json({
             success:true,
             message:'Lấy thành công tất cả khóa học',
             data:getAll
         })
     }catch(err){
+        console.log(err)
         return res.status(500).json({
             success:false,
             message:'Lỗi server',

@@ -100,7 +100,7 @@ const login= async (req, res) => {
                 secure: false,
                 sameSite: 'lax',
         });
-        res.cookie('tokenID', refreshToken.tokenId, {
+        res.cookie('tokenId', refreshToken.tokenId, {
                 httpOnly: true,
                 secure: false,
                 sameSite: 'lax',
@@ -344,7 +344,20 @@ export const deleteUser = async (req, res) => {
 };
 export const logout=async(req,res)=>{
     try{
-        await redis.del('name')
+        const tokenId=req.cookies.tokenId
+        const id=req.userId
+       const doDelete= await redis.del(`user:${id}:${tokenId}`)
+       if (doDelete === 1) {
+            console.log('Đăng xuất thành công')
+            return res.status(200).json({
+                success:true
+            })
+} else {
+            return res.status(400).json({
+                success:false,
+                message:'Token không tồn tại'
+            })
+}
     }catch(err){
 
     }

@@ -30,7 +30,7 @@ export const getAllCategories = async (req, res) => {
   try {
     const categories = await CourseCategory.find()
       .sort({ createdAt: -1 });
-
+    categories.unshift({name:'Tất cả khóa học'})
     res.status(200).json({
       success: true,
       data: categories
